@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int       @id @default(autoincrement())
+  name           String
+  email          String    @unique
+  phone          String?   @unique
+  gender         String?
+  address        String?
+  profession     String?
+  password       String
+  profilePicture String?   @default("https://ui-avatars.com/api/?name=User&background=f3e8ff&color=7e22ce")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  
+  posts          Post[]
+  comments       Comment[]
+  notifications  Notification[]
+  likes          Like[]
+  ratings        Rating[]
+  
+  // Chat relations
+  conversationsAsUser1 Conversation[] @relation("UserOne")
+  conversationsAsUser2 Conversation[] @relation("UserTwo")
+  messages       Message[]
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  imageUrl    String?
+  urgency     String    @default("flexible") // "emergency" | "flexible"
+  authorId    Int
+  author      User      @relation(fields: [authorId], references: [id])
+  areaName    String    
+  accessories String?   
+  createdAt   DateTime  @default(now())
+  
+  comments    Comment[]
+  likes       Like[]
+  ratings     Rating[]
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  authorId  Int
+  postId    Int
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([authorId, postId])
+}
+
+model Rating {
+  id        Int      @id @default(autoincrement())
+  authorId  Int
+  postId    Int
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([authorId, postId])
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  content   String
+  postId    Int
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId  Int
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parentId  Int?      // For threaded replies
+  parent    Comment?  @relation("ThreadReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("ThreadReplies")
+  createdAt DateTime  @default(now())
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  senderId  Int?     // User who triggered notification
+  type      String   // 'COMMENT', 'RATE', 'LIKE', 'MESSAGE'
+  sourceId  Int?     // postId or messageId
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Conversation {
+  id        Int       @id @default(autoincrement())
+  user1Id   Int
+  user2Id   Int
+  user1     User      @relation("UserOne", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2     User      @relation("UserTwo", fields: [user2Id], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  
+  messages  Message[]
+
+  @@unique([user1Id, user2Id])
+}
+
+model Message {
+  id             Int          @id @default(autoincrement())
+  conversationId Int
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       Int
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  content        String?
+  imageUrl       String?
+  isRead         Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+}
+
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}
