@@ -1,0 +1,10 @@
+{
+  "appId": "com.neighbourhoodhelper.app",
+  "appName": "Neighbourhood Helper",
+  "webDir": "out",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://YOUR-VERCEL-DEPLOYMENT-URL.vercel.app",
+    "cleartext": true
+  }
+}

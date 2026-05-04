@@ -7,7 +7,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   // Hide Bottom Navigation entirely when inside a Chat Room
-  if (pathname.startsWith('/chat/')) return null;
+  if (pathname?.startsWith('/chat/')) return null;
 
   const navItems = [
     { name: "Home", href: "/", icon: Home },
@@ -21,7 +21,7 @@ export default function BottomNav() {
       <div className="flex justify-around items-center h-16">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+          const isActive = pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href));
           return (
             <Link
               key={item.name}

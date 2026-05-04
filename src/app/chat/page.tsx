@@ -67,7 +67,7 @@ export default function ChatListPage() {
     <div className="w-full min-h-screen bg-[#fdfcff] px-4 py-6 pb-24">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Messages</h1>
-        <button onClick={handleStartNewChat} className="p-2.5 bg-purple-100 text-purple-700 rounded-full hover:bg-purple-200 transition">
+        <button onClick={() => document.getElementById('chat-search-input')?.focus()} className="p-2.5 bg-purple-100 text-purple-700 rounded-full hover:bg-purple-200 transition">
           <Plus size={20} />
         </button>
       </div>
@@ -75,6 +75,7 @@ export default function ChatListPage() {
       <div className="flex items-center bg-gray-100 rounded-2xl px-4 py-3 mb-6 relative z-10">
         <Search size={18} className="text-gray-400 mr-2" />
         <input 
+          id="chat-search-input"
           placeholder="Search by name to chat..." 
           className="bg-transparent border-none outline-none text-sm w-full" 
           value={searchQuery}
@@ -126,7 +127,7 @@ export default function ChatListPage() {
                       <h4 className="font-extrabold text-gray-900 truncate">{partner.name}</h4>
                       {lastMessage && (
                         <span className="text-[10px] text-gray-400 whitespace-nowrap">
-                          {formatDistanceToNow(new Date(lastMessage.createdAt), { addSuffix: true })}
+                          {formatDistanceToNow(new Date(lastMessage.createdAt))}
                         </span>
                       )}
                     </div>
