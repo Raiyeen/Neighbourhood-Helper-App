@@ -1,10 +1,21 @@
 {
-  "appId": "com.neighbourhoodhelper.app",
-  "appName": "Neighbourhood Helper",
+  "appId": "com.helperapp.app",
+  "appName": "Helper App",
   "webDir": "out",
   "bundledWebRuntime": false,
   "server": {
-    "url": "https://YOUR-VERCEL-DEPLOYMENT-URL.vercel.app",
+    "url": "http://192.168.0.216:3000",
     "cleartext": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 3000,
+      "launchAutoHide": true,
+      "backgroundColor": "#6b21a8",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": true,
+      "spinnerColor": "#ffffff"
+    }
   }
 }
